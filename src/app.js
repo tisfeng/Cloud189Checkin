@@ -276,6 +276,7 @@ const pushTelegramBot = (title, desp) => {
   const data = {
     chat_id: telegramBot.chatId,
     text: title + "\n\n" + desp,
+    parse_mode: "MarkdownV2",
   };
   superagent
     .post(`https://api.telegram.org/bot${telegramBot.botToken}/sendMessage`)
