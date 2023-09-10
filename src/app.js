@@ -1,3 +1,13 @@
+/*
+ * @author: wes-lin
+ * @createTime: 2023-09-08 10:41
+ * @lastEditor: tisfeng
+ * @lastEditTime: 2023-09-10 23:35
+ * @fileName: app.js
+ *
+ * Copyright (c) 2023 by wes-lin, All Rights Reserved.
+ */
+
 /* eslint-disable no-await-in-loop */
 const url = require("url");
 const log4js = require("log4js");
@@ -230,14 +240,14 @@ const doTask = async () => {
     if (index === 0) {
       // 签到
       result.push(
-        `今天${res.isSign ? "已经签到过了，" : ""}签到获得了 ${
+        `今天${res.isSign ? "已经签过到了，" : ""}签到获得了 \`${
           res.netdiskBonus
-        }M 空间`
+        }M\` 空间`
       );
     } else if (res.errorCode === "User_Not_Chance") {
       result.push(`第 ${index} 次抽奖失败，次数不足`);
     } else {
-      result.push(`第 ${index} 次抽奖成功，抽奖获得${res.prizeName}`);
+      result.push(`第 ${index} 次抽奖成功，抽奖获得 \`${res.prizeName}\``);
     }
   }
   return result;
@@ -284,14 +294,14 @@ const pushTelegramBot = (title, desp) => {
     .send(data)
     .end((err, res) => {
       if (err) {
-        logger.error(`TelegramBot 推送失败：${JSON.stringify(err)}`);
+        logger.error(`Telegram Bot 推送失败：${JSON.stringify(err)}`);
         return;
       }
       const json = JSON.parse(res.text);
       if (!json.ok) {
-        logger.error(`TelegramBot 推送失败：${JSON.stringify(json)}`);
+        logger.error(`Telegram Bot 推送失败：${JSON.stringify(json)}`);
       } else {
-        logger.info("TelegramBot 推送成功");
+        logger.info("Telegram Bot 推送成功");
       }
     });
 };
