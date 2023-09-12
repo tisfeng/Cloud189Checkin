@@ -2,7 +2,7 @@
  * @author: wes-lin
  * @createTime: 2023-09-08 10:41
  * @lastEditor: tisfeng
- * @lastEditTime: 2023-09-12 13:27
+ * @lastEditTime: 2023-09-12 13:50
  * @fileName: app.js
  *
  * Copyright (c) 2023 by wes-lin, All Rights Reserved.
@@ -233,15 +233,17 @@ const doTask = async () => {
     const res = await doGet(task);
     if (index === 0) {
       // 签到
-      const signLog = `今天${
+      const signInPrizeLog = `今天${
         res.isSign ? '已经签过到了，' : ''
-      }签到获得了\`${res.netdiskBonus}M\` 天翼云盘空间`;
-      const highligthSignLog = signLog.replace(/天翼云盘(\d+)空间/g, '天翼云盘 `$1` 空间');
-      result.push(highligthSignLog);
+      }签到获得了 \`${res.netdiskBonus}M\` 天翼云盘空间`;
+      result.push(signInPrizeLog);
     } else if (res.errorCode === 'User_Not_Chance') {
-      result.push(`第 ${index} 次抽奖失败，次数不足`);
+      result.push(`第 ${index} 次抽奖失败，抽奖次数不足`);
     } else {
-      result.push(`第 ${index} 次抽奖成功，抽奖获得 \`${res.prizeName}\``);
+      // 第 1 次抽奖成功，抽奖获得天翼云盘50M空间
+      const drawPrizeLog = `第 ${index} 次抽奖获得${res.prizeName}`;
+      const highligthPrizeLog = drawPrizeLog.replace(/云盘(.*?)空间/, '云盘 `$1` 空间');
+      result.push(highligthPrizeLog);
     }
   }
 
