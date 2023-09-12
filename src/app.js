@@ -2,7 +2,7 @@
  * @author: wes-lin
  * @createTime: 2023-09-08 10:41
  * @lastEditor: tisfeng
- * @lastEditTime: 2023-09-10 23:35
+ * @lastEditTime: 2023-09-12 10:55
  * @fileName: app.js
  *
  * Copyright (c) 2023 by wes-lin, All Rights Reserved.
@@ -233,11 +233,11 @@ const doTask = async () => {
     const res = await doGet(task);
     if (index === 0) {
       // 签到
-      result.push(
-        `今天${res.isSign ? '已经签过到了，' : ''}签到获得了 \`${
-          res.netdiskBonus
-        }M\` 空间`,
-      );
+      const signLog = `今天${
+        res.isSign ? '已经签过到了，' : ''
+      }签到获得了\`${res.netdiskBonus}M\` 空间`;
+      const highligthSignLog = signLog.replace(/天翼云盘(\d+)空间/g, '天翼云盘 `$1` 空间');
+      result.push(highligthSignLog);
     } else if (res.errorCode === 'User_Not_Chance') {
       result.push(`第 ${index} 次抽奖失败，次数不足`);
     } else {
