@@ -2,7 +2,7 @@
  * @author: wes-lin
  * @createTime: 2023-09-08 10:41
  * @lastEditor: tisfeng
- * @lastEditTime: 2023-09-12 13:50
+ * @lastEditTime: 2023-09-12 14:40
  * @fileName: app.js
  *
  * Copyright (c) 2023 by wes-lin, All Rights Reserved.
@@ -134,6 +134,7 @@ const getLoginFormData = (username, password, encryptKey) => new Promise((resolv
     });
 });
 
+// 登录
 const login = (formData) => new Promise((resolve, reject) => {
   const data = {
     appKey: 'cloud',
@@ -235,13 +236,14 @@ const doTask = async () => {
       // 签到
       const signInPrizeLog = `今天${
         res.isSign ? '已经签过到了，' : ''
-      }签到获得了 \`${res.netdiskBonus}M\` 天翼云盘空间`;
+      }签到获得了 \`${res.netdiskBonus}M\` 云盘空间`;
       result.push(signInPrizeLog);
     } else if (res.errorCode === 'User_Not_Chance') {
+      // TODO: 如果已经抽过奖，可以直接显示抽奖结果
       result.push(`第 ${index} 次抽奖失败，抽奖次数不足`);
     } else {
       // 第 1 次抽奖成功，抽奖获得天翼云盘50M空间
-      const drawPrizeLog = `第 ${index} 次抽奖获得${res.prizeName}`;
+      const drawPrizeLog = `第 ${index} 次抽奖成功，抽奖获得${res.prizeName}`;
       const highligthPrizeLog = drawPrizeLog.replace(/云盘(.*?)空间/, '云盘 `$1` 空间');
       result.push(highligthPrizeLog);
     }
@@ -250,6 +252,7 @@ const doTask = async () => {
   return result;
 };
 
+// 推送消息到 ServerChan
 const pushServerChan = (title, desp) => {
   if (!serverChan.sendKey) {
     return;
@@ -276,6 +279,7 @@ const pushServerChan = (title, desp) => {
     });
 };
 
+// 推送消息到 Telegram Bot
 const pushTelegramBot = (title, desp) => {
   if (!(telegramBot.botToken && telegramBot.chatId)) {
     return;
@@ -303,10 +307,32 @@ const pushTelegramBot = (title, desp) => {
     });
 };
 
+// 推送消息到各个平台
 const push = (title, desp) => {
   pushServerChan(title, desp);
   pushTelegramBot(title, desp);
 };
+
+// 计算获得的空间总数量，例如 "150M"
+function countTotalSpace(text) {
+  // 使用正则表达式匹配 *M 格式的空间，例如 "50M"
+  const regex = /(\d+M)/g;
+
+  // 使用正则表达式匹配所有匹配项
+  const matches = text.match(regex);
+  let totalSpace = '0M';
+  if (matches) {
+    // 计算总共获得的 *M 格式的空间数量
+    totalSpace = matches.reduce((accumulator, match) => {
+      // 使用正则表达式提取数字部分并将其转换为数字
+      const spaceValue = parseInt(match, 10);
+
+      // 添加到累加器
+      return accumulator + spaceValue;
+    }, 0);
+  }
+  return `${totalSpace}M`;
+}
 
 // 开始执行程序
 async function main() {
@@ -316,6 +342,7 @@ async function main() {
     if (userName && password) {
       // 使用``包裹，防止用户名手机号中的星号 133****9999 影响 markdown 消息格式
       const userNameInfo = `\`${mask(userName, 3, 7)}\``;
+      let totalSpace = '';
 
       try {
         logger.log(`账户 ${userNameInfo} 开始执行`);
@@ -323,12 +350,22 @@ async function main() {
         const result = await doTask();
         result.forEach((r) => logger.log(r));
         logger.log('任务执行完毕');
+
+        const content = result.join('  \n');
+        // 如果抽奖成功，则统计获得 *M 格式的空间的总数量
+        if (content.includes('抽奖成功')) {
+          totalSpace = countTotalSpace(content);
+        }
       } catch (e) {
         if (e.code === 'ECONNRESET') {
           throw e;
         }
       } finally {
-        logger.log(`账户 ${userNameInfo} 执行完毕`);
+        let accountFinishedLog = `账户 ${userNameInfo} 执行完毕`;
+        if (totalSpace) {
+          accountFinishedLog += `，总共获得云盘空间数量：\`${totalSpace}\``;
+        }
+        logger.log(accountFinishedLog);
       }
     }
   }
