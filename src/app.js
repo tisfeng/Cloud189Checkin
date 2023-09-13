@@ -2,7 +2,7 @@
  * @author: wes-lin
  * @createTime: 2023-09-08 10:41
  * @lastEditor: tisfeng
- * @lastEditTime: 2023-09-12 14:40
+ * @lastEditTime: 2023-09-13 09:57
  * @fileName: app.js
  *
  * Copyright (c) 2023 by wes-lin, All Rights Reserved.
@@ -349,7 +349,6 @@ async function main() {
         await doLogin(userName, password);
         const result = await doTask();
         result.forEach((r) => logger.log(r));
-        logger.log('任务执行完毕');
 
         const content = result.join('  \n');
         // 如果抽奖成功，则统计获得 *M 格式的空间的总数量
@@ -361,7 +360,7 @@ async function main() {
           throw e;
         }
       } finally {
-        let accountFinishedLog = `账户 ${userNameInfo} 执行完毕`;
+        let accountFinishedLog = `账户 ${userNameInfo} 任务执行完毕`;
         if (totalSpace) {
           accountFinishedLog += `，总共获得云盘空间数量：\`${totalSpace}\``;
         }
