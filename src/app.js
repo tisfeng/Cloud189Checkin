@@ -2,7 +2,7 @@
  * @author: wes-lin
  * @createTime: 2023-09-08 10:41
  * @lastEditor: tisfeng
- * @lastEditTime: 2023-09-13 09:57
+ * @lastEditTime: 2023-09-14 12:36
  * @fileName: app.js
  *
  * Copyright (c) 2023 by wes-lin, All Rights Reserved.
@@ -33,6 +33,7 @@ const config = require('../config');
 const accounts = require('../accounts');
 const serverChan = require('../serverChan');
 const telegramBot = require('../telegramBot');
+const pushdeer = require('../pushdeer');
 
 const client = superagent.agent();
 const headers = {
@@ -307,9 +308,44 @@ const pushTelegramBot = (title, desp) => {
     });
 };
 
+// 推送消息到 PushDeer, DOCS: https://www.pushdeer.com/dev.html#%E6%8E%A8%E9%80%81%E6%B6%88%E6%81%AF
+const pushPushDeer = (title, desp) => {
+  const { pushkey } = pushdeer;
+  if (!pushkey) {
+    return;
+  }
+  const data = {
+    text: title,
+    desp,
+    pushkey,
+    type: 'markdown',
+  };
+
+  superagent
+    .post('https://api2.pushdeer.com/message/push')
+    .type('form')
+    .send(data)
+    .end((err, res) => {
+      if (err) {
+        logger.error(`PushDeer 推送失败：${JSON.stringify(err)}`);
+        return;
+      }
+      const json = res.body;
+      // code:正确为0，错误为非0,
+      if (json.code !== 0) {
+        logger.error(`PushDeer 推送失败：${JSON.stringify(json)}`);
+      } else {
+        logger.info('PushDeer 推送成功');
+      }
+    });
+};
+
 // 推送消息到各个平台
 const push = (title, desp) => {
   pushServerChan(title, desp);
+  pushPushDeer(title, desp);
+
+  // 注意，本地运行 Telegram Bot 推送需要挂代理，否则会失败。
   pushTelegramBot(title, desp);
 };
 
@@ -350,6 +386,7 @@ async function main() {
         const result = await doTask();
         result.forEach((r) => logger.log(r));
 
+        // PushDeer 的换行符是 '  \n'，前面需要有 2 个空格
         const content = result.join('  \n');
         // 如果抽奖成功，则统计获得 *M 格式的空间的总数量
         if (content.includes('抽奖成功')) {
