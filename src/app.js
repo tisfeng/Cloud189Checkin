@@ -2,7 +2,7 @@
  * @author: wes-lin
  * @createTime: 2023-09-08 10:41
  * @lastEditor: tisfeng
- * @lastEditTime: 2023-09-14 12:36
+ * @lastEditTime: 2023-09-15 09:15
  * @fileName: app.js
  *
  * Copyright (c) 2023 by wes-lin, All Rights Reserved.
@@ -399,7 +399,7 @@ async function main() {
       } finally {
         let accountFinishedLog = `账户 ${userNameInfo} 任务执行完毕`;
         if (totalSpace) {
-          accountFinishedLog += `，总共获得云盘空间数量：\`${totalSpace}\``;
+          accountFinishedLog += `，总共获得 \`${totalSpace}\` 空间`;
         }
         logger.log(accountFinishedLog);
       }
