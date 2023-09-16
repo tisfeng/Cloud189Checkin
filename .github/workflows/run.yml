@@ -37,6 +37,8 @@ jobs:
           TY_PASSWORD4: ${{secrets.TY_PASSWORD4}}
           # Server
           SENDKEY: ${{secrets.SENDKEY}}
+          # pushdeer
+          PUSHDEER_PUSH_KEY: ${{secrets.PUSHDEER_PUSH_KEY}}
           # Telegram
           TELEGRAM_BOT_TOKEN: ${{secrets.TELEGRAM_BOT_TOKEN}}
           TELEGRAM_CHAT_ID: ${{secrets.TELEGRAM_CHAT_ID}}
