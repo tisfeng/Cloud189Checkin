@@ -2,7 +2,7 @@
  * @author: wes-lin
  * @createTime: 2023-09-08 10:41
  * @lastEditor: tisfeng
- * @lastEditTime: 2023-09-16 11:04
+ * @lastEditTime: 2023-09-16 21:12
  * @fileName: app.js
  *
  * Copyright (c) 2023 by wes-lin, All Rights Reserved.
@@ -88,7 +88,7 @@ const getLoginFormData = (username, password, encryptKey) => new Promise((resolv
         .post('https://open.e.189.cn/api/logbox/oauth2/appConf.do')
         .set({
           'User-Agent':
-              'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/76.0',
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/76.0',
           Referer: 'https://open.e.189.cn/',
           lt: query.lt,
           REQID: query.reqId,
@@ -157,7 +157,7 @@ const login = (formData) => new Promise((resolve, reject) => {
     .post('https://open.e.189.cn/api/logbox/oauth2/loginSubmit.do')
     .set({
       'User-Agent':
-          'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/76.0',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:74.0) Gecko/20100101 Firefox/76.0',
       Referer: 'https://open.e.189.cn/',
       lt: formData.lt,
       REQID: formData.REQID,
@@ -221,8 +221,7 @@ const doLogin = (userName, password) => new Promise((resolve, reject) => {
 // 任务 1.签到 2.天天抽红包 3.自动备份抽红包
 const doTask = async () => {
   const tasks = [
-    `https://cloud.189.cn/mkt/userSign.action?rand=${new Date().getTime()}&clientType=TELEANDROID&version=${
-      config.version
+    `https://cloud.189.cn/mkt/userSign.action?rand=${new Date().getTime()}&clientType=TELEANDROID&version=${config.version
     }&model=${config.model}`,
     'https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_SIGNIN&activityId=ACT_SIGNIN',
     'https://m.cloud.189.cn/v2/drawPrizeMarketDetails.action?taskId=TASK_SIGNIN_PHOTOS&activityId=ACT_SIGNIN',
@@ -235,8 +234,7 @@ const doTask = async () => {
     const res = await doGet(task);
     if (index === 0) {
       // 签到
-      const signInPrizeLog = `今天${
-        res.isSign ? '已经签过到了，' : ''
+      const signInPrizeLog = `今天${res.isSign ? '已经签过到了，' : ''
       }签到获得了 \`${res.netdiskBonus}M\` 云盘空间`;
       result.push(signInPrizeLog);
     } else if (res.errorCode === 'User_Not_Chance') {
@@ -245,7 +243,10 @@ const doTask = async () => {
     } else {
       // 第 1 次抽奖成功，抽奖获得天翼云盘50M空间
       const drawPrizeLog = `第 ${index} 次抽奖成功，抽奖获得${res.prizeName}`;
-      const highligthPrizeLog = drawPrizeLog.replace(/云盘(.*?)空间/, '云盘 `$1` 空间');
+      const highligthPrizeLog = drawPrizeLog.replace(
+        /云盘(.*?)空间/,
+        '云盘 `$1` 空间',
+      );
       result.push(highligthPrizeLog);
     }
   }
