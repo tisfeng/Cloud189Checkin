@@ -2,7 +2,7 @@
  * @author: wes-lin
  * @createTime: 2023-09-08 10:41
  * @lastEditor: tisfeng
- * @lastEditTime: 2023-09-15 09:15
+ * @lastEditTime: 2023-09-16 11:04
  * @fileName: app.js
  *
  * Copyright (c) 2023 by wes-lin, All Rights Reserved.
@@ -314,8 +314,9 @@ const pushPushDeer = (title, desp) => {
   if (!pushkey) {
     return;
   }
+  const text = `# ${title}`;
   const data = {
-    text: title,
+    text,
     desp,
     pushkey,
     type: 'markdown',
@@ -399,7 +400,7 @@ async function main() {
       } finally {
         let accountFinishedLog = `账户 ${userNameInfo} 任务执行完毕`;
         if (totalSpace) {
-          accountFinishedLog += `，总共获得 \`${totalSpace}\` 空间`;
+          accountFinishedLog += `，今天总共获得 \`${totalSpace}\` 空间`;
         }
         logger.log(accountFinishedLog);
       }
