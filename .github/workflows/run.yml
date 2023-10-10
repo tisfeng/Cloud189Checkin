@@ -7,8 +7,8 @@ on:
   watch:
     types: started
   schedule:
-    # UTC时间每天22点（中国时间早上6点）执行。 注意，这个时间通常会有延迟，甚至推迟一个小时，取决于 GitHub 的调度队列。
-    - cron: 0 22 * * *
+    # UTC时间每天0点（中国时间早上8点）执行。 注意，这个时间通常会有延迟，甚至推迟一个小时，取决于 GitHub 的调度队列。
+    - cron: 0 0 * * *
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
